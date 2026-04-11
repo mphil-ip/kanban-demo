@@ -1,0 +1,84 @@
+{
+  "app": {
+    "title": "Lists"
+  },
+  "tabs": {
+    "field": "type",
+    "values": [
+      "Policy",
+      "Procurement",
+      "HR",
+      "Facilities",
+      "IT"
+    ]
+  },
+  "columns": {
+    "field": "status",
+    "values": [
+      "On Track",
+      "At Risk",
+      "Complete",
+      "Delayed",
+      "Blocked"
+    ]
+  },
+  "card": {
+    "title": "name",
+    "subtitle": "id",
+    "emphasis": "type_detailed",
+    "linkField": "link",
+    "fields": [
+      "type_detailed",
+      "time_in_state",
+      "age",
+      "created_by",
+      "created_by_office",
+      "requested_by",
+      "requested_by_office",
+      "requested_by_title",
+      "created",
+      "assigned_to",
+      "status",
+      "created_by_title",
+      "type",
+      "last_modified",
+      "state",
+      "link"
+    ]
+  },
+  "filterFields": [
+    "type_detailed",
+    "created_by",
+    "created_by_title",
+    "created_by_office",
+    "requested_by",
+    "requested_by_office",
+    "requested_by_title",
+    "created",
+    "state",
+    "time_in_state",
+    "age",
+    "assigned_to"
+  ],
+  "sortFields": [
+    "id",
+    "name",
+    "type",
+    "type_detailed",
+    "created_by",
+    "created_by_title",
+    "created_by_office",
+    "requested_by",
+    "requested_by_office",
+    "requested_by_title",
+    "created",
+    "last_modified",
+    "state",
+    "time_in_state",
+    "status",
+    "age",
+    "assigned_to",
+    "link"
+  ],
+  "fieldTypeOverrides": {}
+}
