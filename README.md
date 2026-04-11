@@ -20,6 +20,7 @@ A configurable Kanban board for tracking internal requests. The app is now packa
 | `src/main.jsx` | React entrypoint |
 | `src/App.jsx` | Main board, filter, data, and configuration UI |
 | `src/config.js` | Default board configuration |
+| `data-source.config.js` | Local JSON or Databricks Unity Catalog data source settings |
 | `data.json` | Request records loaded by the app |
 | `server/index.js` | Express server for Databricks Apps and local production serving |
 | `profiles/` | Saved configuration profiles |
@@ -111,6 +112,54 @@ export const CONFIG = {
 ```
 
 The in-browser Configure page can also change the active board setup and save it as a profile when the Express server is running.
+
+## Data Source
+
+Edit `data-source.config.js` to choose where board records come from.
+
+The default uses the checked-in demo file:
+
+```js
+export const DATA_SOURCE = {
+  source: "local",
+  local: {
+    file: "data.json",
+  },
+};
+```
+
+To load records from Databricks, change `source` to `"databricks"` and set the Unity Catalog target:
+
+```js
+export const DATA_SOURCE = {
+  source: "databricks",
+  databricks: {
+    host: process.env.DATABRICKS_HOST,
+    token: process.env.DATABRICKS_TOKEN,
+    httpPath: process.env.DATABRICKS_SQL_HTTP_PATH,
+
+    catalog: "main",
+    schema: "default",
+    table: "requests",
+
+    columns: ["*"],
+    where: "",
+    orderBy: "",
+    limit: 5000,
+  },
+};
+```
+
+Set the connection environment variables before starting the app:
+
+```bash
+export DATABRICKS_HOST="dbc-xxxxxxxx-xxxx.cloud.databricks.com"
+export DATABRICKS_TOKEN="..."
+export DATABRICKS_SQL_HTTP_PATH="/sql/1.0/warehouses/..."
+npm run start
+```
+
+The app exposes `GET /data-source` as a quick sanity check. It returns the configured catalog, schema, table, and whether a token is present, but it does not return the token value.
 
 ## Profile API
 
