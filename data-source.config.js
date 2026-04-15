@@ -3,7 +3,7 @@
 // Keep `source` as "local" for demo data from ./data.json.
 // Change it to "databricks" to read from a Unity Catalog table.
 export const DATA_SOURCE = {
-  source: "local",
+  source: "databricks",
 
   local: {
     file: "data.json",
