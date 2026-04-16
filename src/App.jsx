@@ -153,6 +153,14 @@ function resolveConfig(cfg, allFields, data) {
     cfg.card?.title, cfg.card?.subtitle, cfg.card?.emphasis,
     cfg.tabs?.field, cfg.columns?.field, cfg.card?.linkField,
   ].filter(Boolean));
+  // Use hardcoded values only if they actually exist in the data for that field.
+  // If the field was changed and the old values no longer match, derive from data.
+  function resolvedValues(fieldName, hardcoded) {
+    if (!hardcoded) return uniqueValues(fieldName, data);
+    const present = new Set(data.map(d => d[fieldName]));
+    return hardcoded.some(v => present.has(v)) ? hardcoded : uniqueValues(fieldName, data);
+  }
+
   return {
     ...cfg,
     card: {
@@ -161,11 +169,11 @@ function resolveConfig(cfg, allFields, data) {
     },
     tabs: {
       ...cfg.tabs,
-      values: cfg.tabs?.values ?? uniqueValues(cfg.tabs?.field, data),
+      values: resolvedValues(cfg.tabs?.field, cfg.tabs?.values),
     },
     columns: {
       ...cfg.columns,
-      values: cfg.columns?.values ?? uniqueValues(cfg.columns?.field, data),
+      values: resolvedValues(cfg.columns?.field, cfg.columns?.values),
     },
     filterFields: cfg.filterFields ?? allFields,
     sortFields: cfg.sortFields ?? allFields,
