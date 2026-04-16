@@ -182,9 +182,13 @@ function resolveConfig(cfg, allFields, data) {
 }
 
 function parseHours(str) {
-  if (!str) return 0;
-  const [h, m] = str.split(":").map(Number);
-  return h + (m || 0) / 60;
+  if (!str && str !== 0) return 0;
+  const s = String(str);
+  if (s.includes(":")) {
+    const [h, m] = s.split(":").map(Number);
+    return h + (m || 0) / 60;
+  }
+  return parseFloat(s) || 0;
 }
 
 // ─── Condition operators ───────────────────────────────────────────────────────
@@ -258,7 +262,7 @@ function detectFieldType(field, data) {
   if (samples.length === 0) return "text";
   if (samples.every(v => /^https?:\/\//.test(String(v)))) return "text";
   if (samples.every(v => /^\d{4}-\d{2}-\d{2}/.test(String(v)))) return "date";
-  if (samples.every(v => /^\d+:\d{2}$/.test(String(v)))) return "duration";
+  if (samples.every(v => /^\d+:\d{2}$/.test(String(v)) || /^\d+(\.\d+)?$/.test(String(v)))) return "duration";
   const unique = new Set(samples);
   if (unique.size < samples.length && unique.size <= 20) return "categorical";
   return "text";
@@ -299,7 +303,7 @@ function KanbanCard({ item, config }) {
       ...config.card.fields.map(f =>
         React.createElement("div", { key: f, style: { display: "flex", gap: 6, alignItems: "center" } },
           React.createElement("span", { style: { fontSize: 11, color: t.cardFieldLabel, minWidth: 76 } }, label(f)),
-          React.createElement("span", { style: { fontSize: 11, color: t.cardFieldValue } }, item[f] || "—")
+          React.createElement("span", { style: { fontSize: 11, color: t.cardFieldValue } }, item[f] != null && item[f] !== "" ? item[f] : "—")
         )
       )
     )
