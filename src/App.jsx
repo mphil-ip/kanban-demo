@@ -165,7 +165,15 @@ function resolveConfig(cfg, allFields, data) {
     ...cfg,
     card: {
       ...cfg.card,
-      fields: cfg.card?.fields ?? allFields.filter(f => !reserved.has(f)),
+      fields: (() => {
+        const dataFields = allFields.filter(f => !reserved.has(f));
+        if (!cfg.card?.fields) return dataFields;
+        // Keep configured fields that still exist in the data, then append any
+        // new data fields that aren't already in the list.
+        const existing = cfg.card.fields.filter(f => allFields.includes(f));
+        const added = dataFields.filter(f => !existing.includes(f));
+        return [...existing, ...added];
+      })(),
     },
     tabs: {
       ...cfg.tabs,
